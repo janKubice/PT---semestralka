@@ -14,10 +14,6 @@ public class Simulation {
 	private int[][] fatctoriesProduction;
 	private int[][] demant;
 	
-	public void setTravelCostsSize() {
-		travelCosts = new int[factories][shops];
-	}
-	
 	public int getFactories() {
 		return factories;
 	}
@@ -66,6 +62,28 @@ public class Simulation {
 	public void setDemant(int[][] demant) {
 		this.demant = demant;
 	}
+	public void setDemantLine(int index, int[] demant) {
+		this.demant[index] = demant;
+	}
+	public void setTravelCostLine(int index, int[] cost) {
+		this.travelCosts[index] = cost;
+	}
+	public void setFactoriesProductionLine(int index, int[] production) {
+		this.fatctoriesProduction[index] = production;
+	}
+	public void setStartingSuppliesLine(int index, int[] suplies) {
+		this.startingSupplies[index] = suplies;
+	}
+	
+	/**
+	 * Nastaví velikost první dimenze maticí
+	 */
+	public void initMatrixes() {
+		travelCosts = new int[factories][shops];
+		startingSupplies = new int[factories][shops];
+		fatctoriesProduction = new int[articles*days][factories];
+		demant = new int[articles*days][factories];
+	}
 	
 	@Override
 	public String toString() {
@@ -75,5 +93,9 @@ public class Simulation {
 		returnString += "Articles: " + articles + "\n";
 		returnString += "Days: " + days + "\n";
 		return returnString;
+	}
+	
+	public void arrays() {
+		System.out.println(Arrays.deepToString(travelCosts));
 	}
 }

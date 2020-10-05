@@ -3,6 +3,7 @@ package Scripts;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -32,15 +33,23 @@ public class ReadData {
 			if (!line.contains("#") && line.length() != 0) {
 				if (onLine == 0) {
 					readFirstLine(line);
-					simulation.setTravelCostsSize();
 				}
-				if ((onLine >= 1) && (onLine <= simulation.getFactories() + 1)) {
-					setLineOfCostMatrix(onLine - 1, line);
+				else if ((onLine >= 1) && (onLine < simulation.getFactories() + 1)) {
+					simulation.setTravelCostLine(onLine - 1, lineToNumbers(line, simulation.getFactories()));
+				}
+				else if (true) {
+					simulation.setStartingSuppliesLine(onLine, lineToNumbers(line, simulation.getFactories()));
+				}
+				else if (true) {
+					simulation.setFactoriesProductionLine(onLine, lineToNumbers(line, simulation.getFactories()));
+				}
+				else if (true) {
+					simulation.setDemantLine(onLine, lineToNumbers(line, simulation.getFactories()));;
 				}
 				onLine++;
 			}
 		}
-		
+		simulation.arrays();
 		sc.close();
 	}
 	
@@ -50,12 +59,13 @@ public class ReadData {
 	 * @param line String obsahující první øádku s potøebnými informacemi
 	 */
 	private void readFirstLine(String line) {
-		ArrayList<Integer> numbers = lineToNumbers(line);
+		int[] numbers = lineToNumbers(line, 4);
 		
-		simulation.setFactories(numbers.get(0));
-		simulation.setShops(numbers.get(1));
-		simulation.setArticles(numbers.get(2));
-		simulation.setDays(numbers.get(3));
+		simulation.setFactories(numbers[0]);
+		simulation.setShops(numbers[1]);
+		simulation.setArticles(numbers[2]);
+		simulation.setDays(numbers[3]);
+		simulation.initMatrixes();
 	}
 	
 	/**
@@ -63,33 +73,31 @@ public class ReadData {
 	 * @param line øádka k pøevedení
 	 * @return arrayList èísel
 	 */
-	private ArrayList<Integer> lineToNumbers(String line) {
+	private int[] lineToNumbers(String line, int lenght) {
 		char[] charLine = line.toCharArray();
-		ArrayList<Integer> numbers = new ArrayList<>();
+		int[] numbers = new int[lenght+1];
 		String tempString = "";
 		int charindex = 0;
+		int arrIndex = 0;
 		for (char c : charLine) {
 			charindex++;
 			if (c != ' ') {
 				tempString += c;
 			}
 			else {
-				numbers.add(Integer.parseInt(tempString));
+				numbers[arrIndex] = Integer.parseInt(tempString);
 				tempString = "";
+				arrIndex++;
 			}
 			
 			if (charindex == line.length() && c != ' ') {
-				numbers.add(Integer.parseInt(tempString));
+				numbers[arrIndex] = Integer.parseInt(tempString);
 				tempString = "";
+				arrIndex++;
 			}
 		}
 		return numbers;
 	}
-	
-	private void setLineOfCostMatrix(int lineIIndex, String line) {
-		
-	}
-	
 	
 	
 }

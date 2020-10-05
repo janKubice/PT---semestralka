@@ -18,7 +18,7 @@ public class Main {
 	public static void main(String[] args) {
 		FrameMaker frameMaker = new FrameMaker();
 		Simulation simulation = new Simulation();
-		ReadData readData = new ReadData("Inputs/real_medium.txt", simulation);
+		ReadData readData = new ReadData("Inputs/test_optim_sink.txt", simulation);
 		
 		try {
 			readData.setDataToSimulation();
