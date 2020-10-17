@@ -31,7 +31,7 @@ public class ReadData {
 		while (sc.hasNextLine()) {
 			line = sc.nextLine();
 			if (!line.contains("#") && line.length() != 0) {
-				if (onLine == 0) {
+				if (onLine == 0) { //nacte prvni radek
 					readFirstLine(line);
 				}
 				else if ((onLine >= 1) && (onLine < simulation.getFactories() + 1)) {
