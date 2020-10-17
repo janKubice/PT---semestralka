@@ -54,9 +54,9 @@ public class ReadData {
 	}
 	
 	/**
-	 * Pøevede první øádku textového souboru na èísla a nastaví je Simulátoru. 
-	 * (poèet továren, obchodù, druhé zboí, dnù)
-	 * @param line String obsahující první øádku s potøebnımi informacemi
+	 * Prevede prvni radku textoveho souboru na cisla a nastavi je Simulatoru. 
+	 * (pocet tovaren, obchodu, druhy zbozi, dnu)
+	 * @param line String obsahujici prvni radku s potrebnymi informacemi
 	 */
 	private void readFirstLine(String line) {
 		int[] numbers = lineToNumbers(line, 4);
@@ -69,9 +69,9 @@ public class ReadData {
 	}
 	
 	/**
-	 * Pøevede poadovanou øádku na arraylist èísel
-	 * @param line øádka k pøevedení
-	 * @return arrayList èísel
+	 * Prevede pozadovanou radku na arraylist cisel
+	 * @param line radka k prevedeni
+	 * @return arrayList cisel
 	 */
 	private int[] lineToNumbers(String line, int lenght) {
 		char[] charLine = line.toCharArray();
