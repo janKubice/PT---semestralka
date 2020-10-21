@@ -2,8 +2,6 @@ package Scripts;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -20,14 +18,15 @@ public class ReadData {
 	}
 	
 	/**
-	 * Naète textový soubor a nastaví data simulatoru
-	 * @throws FileNotFoundException chyba pøi nenalezeném souboru
+	 * Nacte textovy soubor a nastavi data simulatoru
+	 * @throws FileNotFoundException chyba pri nenalezenem souboru
 	 */
 	public void setDataToSimulation() throws FileNotFoundException {
 		File file = new File(path);
 		Scanner sc = new Scanner(file);
 		String line;
-		int onLine = 0;
+		int onLine = 0, indexTravel = 0, indexSupp = 0, indexFac = 0, indexDemand = 0;
+		
 		while (sc.hasNextLine()) {
 			line = sc.nextLine();
 			if (!line.contains("#") && line.length() != 0) {
@@ -35,21 +34,26 @@ public class ReadData {
 					readFirstLine(line);
 				}
 				else if ((onLine >= 1) && (onLine < simulation.getFactories() + 1)) {
-					simulation.setTravelCostLine(onLine - 1, lineToNumbers(line, simulation.getFactories()));
+					simulation.setTravelCostLine(indexTravel, lineToNumbers(line, simulation.getShops()));
+					indexTravel++;
 				}
-				else if (true) {
-					simulation.setStartingSuppliesLine(onLine, lineToNumbers(line, simulation.getFactories()));
+				else if ((onLine >= simulation.getFactories() + 1) && (onLine < simulation.getArticles() + simulation.getFactories() + 1)) {
+					simulation.setStartingSuppliesLine(indexSupp, lineToNumbers(line, simulation.getShops()));
+					indexSupp++;
 				}
-				else if (true) {
-					simulation.setFactoriesProductionLine(onLine, lineToNumbers(line, simulation.getFactories()));
+				else if ((onLine >= simulation.getArticles() + simulation.getFactories() + 1) && (onLine < (simulation.getArticles() * simulation.getDays()) + simulation.getArticles() + simulation.getFactories() + 1)) {
+					simulation.setFactoriesProductionLine(indexFac, lineToNumbers(line, simulation.getFactories()));
+					indexFac++;
 				}
-				else if (true) {
-					simulation.setDemantLine(onLine, lineToNumbers(line, simulation.getFactories()));;
+				else if ((onLine >= (simulation.getArticles() * simulation.getDays()) + simulation.getArticles() + simulation.getFactories() + 1) && (onLine < (simulation.getDays() * simulation.getArticles()) + (simulation.getArticles() * simulation.getDays()) + simulation.getArticles() + simulation.getFactories() + 1)) {
+					simulation.setDemantLine(indexDemand, lineToNumbers(line, simulation.getShops()));
+					indexDemand++;
 				}
 				onLine++;
 			}
 		}
-		simulation.arrays();
+		//simulation.arrays();
+		System.out.println("done");
 		sc.close();
 	}
 	
@@ -75,12 +79,13 @@ public class ReadData {
 	 */
 	private int[] lineToNumbers(String line, int lenght) {
 		char[] charLine = line.toCharArray();
-		int[] numbers = new int[lenght+1];
+		int[] numbers = new int[lenght];
 		String tempString = "";
 		int charindex = 0;
 		int arrIndex = 0;
 		for (char c : charLine) {
 			charindex++;
+			
 			if (c != ' ') {
 				tempString += c;
 			}
@@ -96,6 +101,7 @@ public class ReadData {
 				arrIndex++;
 			}
 		}
+		
 		return numbers;
 	}
 	
