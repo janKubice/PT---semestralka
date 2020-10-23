@@ -1,10 +1,9 @@
 package Scripts;
 
-import java.security.Identity;
 import java.util.Arrays;
 
 /**
- * 
+ * Trida reprezentujici simulaci
  * @author Jan Kubice & Michaela Benešová
  *
  */
@@ -17,6 +16,7 @@ public class Simulation {
 	private Building[] buildings;
 	
 	private int totalCost = 0;
+	private int dayCost = 0;
 	public int lowestCostNOW = 0;
 
 	public int getFactories() {
@@ -118,8 +118,8 @@ public class Simulation {
 	public void setBuildings(Building[] buildings) {
 		this.buildings = buildings;
 	}
-	public void addToTotalCost(int cost) {
-		this.totalCost += cost;
+	public void addToDayCost(int cost) {
+		this.dayCost += cost;
 	}
 
 	/**
@@ -157,8 +157,7 @@ public class Simulation {
 	}
 
 	/**
-	 * Spusti simulaci na danem grafu
-	 * 
+	 * Spusti simulaci na danem grafui
 	 * @param graph graf vytvoreny z tovaren a obchodu
 	 */
 	public void startSimulation(Graph graph) {
@@ -169,30 +168,34 @@ public class Simulation {
 		for (int day = 0; day < days; day++) {
 			
 			for (int building = 0; building < graph.getList().length; building++) {
-				
-				for (int i = 0; i < graph.getList()[building].size(); i++) {
+				if (buildings[building] instanceof Factory) {
+					((Factory)buildings[building]).addProduction(day);
+				}
+				else {
 					index = 0;
-					if (buildings[building] instanceof Factory) {
-						((Factory)buildings[building]).addProduction(day);
-					}
-					else {		
-						do {
-							fac = graph.getNearestFactoryToShop((Shop)buildings[building], this, index);
-							itIsOK = ((Shop)buildings[building]).getArticles(fac, day, days, lowestCostNOW, this);
-							index++;
-						}while(!itIsOK);
+					do {
+						if (day == 0)
+							((Shop)buildings[building]).takeFromStocks(day, days, this);
 						
-					}
+						fac = graph.getNearestFactoryToShop((Shop)buildings[building], this, index);
+						if (fac == null)
+							return;
+						
+						itIsOK = ((Shop)buildings[building]).getArticles(fac, day, days, lowestCostNOW, this);
+						index++;
+					}while(!itIsOK);
 				}
 			}
 			printDay(day);
+			totalCost += dayCost;
+			dayCost = 0;
 		}
-		System.out.println();
+		System.out.println("celkova cena prepravy: " + totalCost);
 	}
 	
 	public void printDay(int day) {
-		System.out.print(day+1 + ": ");
-		System.out.println(totalCost);
+		System.out.println("Cena prepravy za " + (day+1) + ". den: " + dayCost);
+		
 	}
 
 }

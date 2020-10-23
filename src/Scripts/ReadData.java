@@ -52,8 +52,6 @@ public class ReadData {
 				onLine++;
 			}
 		}
-		//simulation.arrays();
-		System.out.println("done");
 		sc.close();
 	}
 	
@@ -85,11 +83,13 @@ public class ReadData {
 		int arrIndex = 0;
 		for (char c : charLine) {
 			charindex++;
-			
 			if (c != ' ') {
 				tempString += c;
 			}
 			else {
+				if (tempString == "")
+					continue;
+				
 				numbers[arrIndex] = Integer.parseInt(tempString);
 				tempString = "";
 				arrIndex++;
@@ -105,5 +105,8 @@ public class ReadData {
 		return numbers;
 	}
 	
+	private boolean checkFile() {
+		return false;
+	}
 	
 }

@@ -4,10 +4,21 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-public class Graph implements Comparator<Edge>{
+/**
+ * Trida reprezentujici Graf
+ * Jako vrcholy grafu je vyuzita trida Building
+ * hrana grafu je reprezentovana tridou Edge
+ * @author Jan Kubice & Michaela Benešová
+ *
+ */
+public class Graph{
 	private int vertices;
 	private LinkedList<Edge> list[];
 
+	/**
+	 * Konstruktor grafu
+	 * @param vertices pocet vrcholu grafu (pocet budov v simulaci)
+	 */
 	public Graph(int vertices) {
 		this.vertices=vertices;
 		list = new LinkedList[vertices];
@@ -44,7 +55,19 @@ public class Graph implements Comparator<Edge>{
         }
     }
 	
-	public Factory getNearestFactoryToShop(Shop shop, Simulation sim, int index) {
+	/**
+	 * seradi tovarny pripojene hranou k obchodu a vrati x-tou nejblizsi
+	 * @param shop obchod pro ktery hledame tovarnu
+	 * @param sim instance simulace
+	 * @param x poradi tovarny v serazenem poli
+	 * @return pozadovanou tovarnu
+	 */
+	public Factory getNearestFactoryToShop(Shop shop, Simulation sim, int x) {
+		if (x >= sim.getFactories()) {
+			System.out.println("Neuspokojená poptávka obchodu: " + shop.index);
+			return null;
+		}
+		
 		Factory nearest = (Factory)list[shop.index].get(0).getDestination();
 		int lowestCost = list[shop.index].get(0).getCost();
 		LinkedList<Edge> factoriesByCost = new LinkedList<Edge>();
@@ -59,17 +82,9 @@ public class Graph implements Comparator<Edge>{
 	                return Integer.compare(s1.getCost(), s2.getCost());
 	        }
 	    });
-		
-		/*
-		for (int factory = 1; factory < list[shop.index].size(); factory++) {
-			if (list[shop.index].get(factory).getCost() < lowestCost) {
-				nearest = (Factory)list[shop.index].get(factory).getDestination();
-				lowestCost = list[shop.index].get(factory).getCost();
-			}
-		}*/
 
-		sim.lowestCostNOW = factoriesByCost.get(index).getCost();
-		return (Factory)factoriesByCost.get(index).getDestination();
+		sim.lowestCostNOW = factoriesByCost.get(x).getCost();
+		return (Factory)factoriesByCost.get(x).getDestination();
 	}
 	
 	public LinkedList<Edge>[] getList() {
@@ -80,10 +95,7 @@ public class Graph implements Comparator<Edge>{
 		return vertices;
 	}
 
-	@Override
-	public int compare(Edge o1, Edge o2) {
-		return Integer.compare(o1.getCost(), o2.getCost());
-	}
+	
 	
 }
 

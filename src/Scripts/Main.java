@@ -16,12 +16,14 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+
 		FrameMaker frameMaker = new FrameMaker();
-		JFrame fram = frameMaker.makeMenu();
 		Simulation simulation = new Simulation();
 		ReadData readData = new ReadData("Inputs/test_optim.txt", simulation);
+		JFrame frame = frameMaker.makeMenu();
 		Graph graph;
 		
+		frame.setVisible(true);
 		
 		try {
 			readData.setDataToSimulation();
@@ -55,6 +57,12 @@ public class Main {
 
 	}
 	
+	/**
+	 * 
+	 * @param i
+	 * @param simulation
+	 * @return
+	 */
 	public static int[] getProduction(int i, Simulation simulation) {
 		 int[] production = new int[simulation.getDays()*simulation.getArticles()];
 		 
@@ -65,6 +73,12 @@ public class Main {
 		 return production;
 	}
 	
+	/**
+	 * 
+	 * @param i
+	 * @param simulation
+	 * @return
+	 */
 	public static int[] getDemand(int i, Simulation simulation) {
 		int[] demand = new int[simulation.getDays()*simulation.getArticles()];
 		 
@@ -75,6 +89,12 @@ public class Main {
 		 return demand;
 	}
 	
+	/**
+	 * 
+	 * @param i
+	 * @param simulation
+	 * @return
+	 */
 	public static int[] getStartingSupplies(int i, Simulation simulation) {
 		 int[] supplies = new int[simulation.getArticles()];
 		 
@@ -84,5 +104,7 @@ public class Main {
 		 
 		 return supplies;
 	}
+	
+	
 	
 }
