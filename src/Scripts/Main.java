@@ -1,8 +1,12 @@
 package Scripts;
 
+import java.awt.EventQueue;
 import java.io.FileNotFoundException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 /**
  * 
@@ -13,98 +17,29 @@ public class Main {
 
 	/**
 	 * Vstupni bod programu
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
-		FrameMaker frameMaker = new FrameMaker();
+		WriteData.setFile("", "slozka");
+		WriteData.openFile();
 		Simulation simulation = new Simulation();
-		ReadData readData = new ReadData("Inputs/test_optim.txt", simulation);
-		JFrame frame = frameMaker.makeMenu();
-		Graph graph;
-		
-		frame.setVisible(true);
-		
-		try {
-			readData.setDataToSimulation();
-		} catch (FileNotFoundException e) {
-			System.out.print("Nepodaøilo se naèíst data");
-			System.out.println(e.getMessage());
-		}
-		
-		System.out.println(simulation.toString());
-		
+		ReadData readData = new ReadData(simulation);
+		FrameMaker frameMaker = new FrameMaker(readData, simulation);
+		FrameManager.frameMenu = frameMaker.makeMenu();
+		FrameManager.openFrame(FrameManager.frameMenu);
 
-		graph = new Graph(simulation.getFactories() + simulation.getShops());
-		Building[] buildings = new Building[graph.getVertices()];
-		
-		for (int i = 0; i < graph.getVertices(); i++) {
-			if (i < simulation.getFactories())
-				buildings[i] = new Factory(i, getProduction(i,simulation), simulation.getArticles());
-			else
-				buildings[i] = new Shop(i, getDemand(i,simulation), getStartingSupplies(i, simulation));
-		}
-		
-		for (int i = 0; i < simulation.getFactories(); i++) {
-			for (int j = simulation.getFactories(); j < buildings.length; j++) {
-				graph.addEdge(buildings[i], buildings[j], simulation.getTravelCosts(i, j - simulation.getFactories()));
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+
+			@Override
+			public void run() {
+				if (simulation.canSimulate) {
+					simulation.simulate();
+					simulation.nextStep();
+				}
 			}
-		}
-		
-		
-		simulation.setBuildings(buildings);
-		simulation.startSimulation(graph);
+		}, 0, Settings.simulationDelay);
+	}
 
-	}
-	
-	/**
-	 * 
-	 * @param i
-	 * @param simulation
-	 * @return
-	 */
-	public static int[] getProduction(int i, Simulation simulation) {
-		 int[] production = new int[simulation.getDays()*simulation.getArticles()];
-		 
-		 for(int j = 0; j < simulation.getDays()*simulation.getArticles();j++) {
-			 production[j] = simulation.getFactoriesProduction(j, i);
-		 }
-		 
-		 return production;
-	}
-	
-	/**
-	 * 
-	 * @param i
-	 * @param simulation
-	 * @return
-	 */
-	public static int[] getDemand(int i, Simulation simulation) {
-		int[] demand = new int[simulation.getDays()*simulation.getArticles()];
-		 
-		 for(int j = 0; j < simulation.getDays()*simulation.getArticles();j++) {
-			 demand[j] = simulation.getDemand(j, i - simulation.getFactories());
-		 }
-		 
-		 return demand;
-	}
-	
-	/**
-	 * 
-	 * @param i
-	 * @param simulation
-	 * @return
-	 */
-	public static int[] getStartingSupplies(int i, Simulation simulation) {
-		 int[] supplies = new int[simulation.getArticles()];
-		 
-		 for(int j = 0; j < simulation.getArticles();j++) {
-			 supplies[j] = simulation.getStartingSupplies(j, i - simulation.getFactories());
-		 }
-		 
-		 return supplies;
-	}
-	
-	
-	
 }

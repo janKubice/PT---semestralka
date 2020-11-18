@@ -4,17 +4,27 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 /**
  * Tøída starající se o naètení dat z textového souboru a nastavení parametru simulace
  * @author Jan Kubice & Michaela Benešová
  */
 public class ReadData {
-	String path;
+	public static String path;
 	Simulation simulation;
 	
 	public ReadData(String path, Simulation simulator) {
 		this.path = path;
 		this.simulation = simulator;
+	}
+	
+	public ReadData(Simulation simulator) {
+		this.simulation = simulator;
+	}
+	
+	public void setPath(String path) {
+		this.path = path;
 	}
 	
 	/**
@@ -31,7 +41,10 @@ public class ReadData {
 			line = sc.nextLine();
 			if (!line.contains("#") && line.length() != 0) {
 				if (onLine == 0) { //nacte prvni radek
-					readFirstLine(line);
+					if (readFirstLine(line) == false) {
+						JOptionPane.showMessageDialog(null, "Nesprávná data v souboru");
+						return;
+					}
 				}
 				else if ((onLine >= 1) && (onLine < simulation.getFactories() + 1)) {
 					simulation.setTravelCostLine(indexTravel, lineToNumbers(line, simulation.getShops()));
@@ -53,6 +66,9 @@ public class ReadData {
 			}
 		}
 		sc.close();
+		System.out.println(simulation.toString());
+		//simulation.setUpSimulation();
+		//simulation.startSimulation();
 	}
 	
 	/**
@@ -60,14 +76,20 @@ public class ReadData {
 	 * (pocet tovaren, obchodu, druhy zbozi, dnu)
 	 * @param line String obsahujici prvni radku s potrebnymi informacemi
 	 */
-	private void readFirstLine(String line) {
+	private boolean readFirstLine(String line) {
 		int[] numbers = lineToNumbers(line, 4);
+		
+		for (int i : numbers) {
+			if (i==0)
+				return false;
+		}
 		
 		simulation.setFactories(numbers[0]);
 		simulation.setShops(numbers[1]);
 		simulation.setArticles(numbers[2]);
 		simulation.setDays(numbers[3]);
 		simulation.initMatrixes();
+		return true;
 	}
 	
 	/**

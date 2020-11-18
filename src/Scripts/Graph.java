@@ -67,7 +67,7 @@ public class Graph{
 			System.out.println("Neuspokojená poptávka obchodu: " + shop.index);
 			return null;
 		}
-		
+
 		Factory nearest = (Factory)list[shop.index].get(0).getDestination();
 		int lowestCost = list[shop.index].get(0).getCost();
 		LinkedList<Edge> factoriesByCost = new LinkedList<Edge>();

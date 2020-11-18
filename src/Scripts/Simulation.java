@@ -1,9 +1,15 @@
 package Scripts;
 
+import java.awt.Color;
+import java.awt.Frame;
 import java.util.Arrays;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  * Trida reprezentujici simulaci
+ * 
  * @author Jan Kubice & Michaela Benešová
  *
  */
@@ -14,10 +20,17 @@ public class Simulation {
 	private int[][] factoriesProduction;
 	private int[][] demand;
 	private Building[] buildings;
-	
-	private int totalCost = 0;
+
+	public int totalCost = 0;
 	private int dayCost = 0;
 	public int lowestCostNOW = 0;
+	public boolean cancel = false;
+
+	Graph graph;
+	public boolean canSimulate;
+	
+	public int day;
+	public int building;
 
 	public int getFactories() {
 		return factories;
@@ -118,6 +131,7 @@ public class Simulation {
 	public void setBuildings(Building[] buildings) {
 		this.buildings = buildings;
 	}
+
 	public void addToDayCost(int cost) {
 		this.dayCost += cost;
 	}
@@ -157,45 +171,177 @@ public class Simulation {
 	}
 
 	/**
+	 * Nastaveni simulace pres spustenim
+	 */
+	public void setUpSimulation() {
+		graph = new Graph(getFactories() + getShops());
+		buildings = new Building[graph.getVertices()];
+
+		for (int i = 0; i < graph.getVertices(); i++) {
+			if (i < getFactories())
+				buildings[i] = new Factory(i, getProduction(i), getArticles());
+			else
+				buildings[i] = new Shop(i, getDemand(i), getStartingSupplies(i));
+		}
+
+		for (int i = 0; i < getFactories(); i++) {
+			for (int j = getFactories(); j < buildings.length; j++) {
+				graph.addEdge(buildings[i], buildings[j], getTravelCosts(i, j - getFactories()));
+			}
+		}
+		
+		day = 0;
+		building = 0;
+	}
+
+	/**
 	 * Spusti simulaci na danem grafui
+	 * 
 	 * @param graph graf vytvoreny z tovaren a obchodu
 	 */
-	public void startSimulation(Graph graph) {
+	public void startSimulation() {
 		Factory fac;
+		cancel = false;
 		boolean itIsOK;
 		int index = 0;
-		
+
 		for (int day = 0; day < days; day++) {
-			
+
 			for (int building = 0; building < graph.getList().length; building++) {
+				if (cancel)
+					return;
+				
 				if (buildings[building] instanceof Factory) {
-					((Factory)buildings[building]).addProduction(day);
-				}
-				else {
+					((Factory) buildings[building]).addProduction(day);
+				} else {
 					index = 0;
 					do {
 						if (day == 0)
-							((Shop)buildings[building]).takeFromStocks(day, days, this);
-						
-						fac = graph.getNearestFactoryToShop((Shop)buildings[building], this, index);
+							((Shop) buildings[building]).takeFromStocks(day, days, this);
+
+						fac = graph.getNearestFactoryToShop((Shop) buildings[building], this, index);
 						if (fac == null)
 							return;
-						
-						itIsOK = ((Shop)buildings[building]).getArticles(fac, day, days, lowestCostNOW, this);
+
+						itIsOK = ((Shop) buildings[building]).transportArticles(fac, day, days, lowestCostNOW, this);
 						index++;
-					}while(!itIsOK);
+					} while (!itIsOK);
 				}
 			}
-			printDay(day);
+			
+
+			System.out.print(returnDay(day) + "\n");
+			FrameMaker.appendTA(returnDay(day), Color.green);
 			totalCost += dayCost;
+			
 			dayCost = 0;
 		}
 		System.out.println("celkova cena prepravy: " + totalCost);
+		WriteData.appendToFile("celkova cena prepravy: " + String.valueOf(totalCost));
+		FrameMaker.appendTA("celkova cena prepravy: " + totalCost, Color.GREEN);
+		JOptionPane.showMessageDialog(null, "Simulace dokonèena");
+		WriteData.closeFile();
 	}
 	
-	public void printDay(int day) {
-		System.out.println("Cena prepravy za " + (day+1) + ". den: " + dayCost);
+	public void nextStep() {
+		if (building == graph.getList().length-1) {
+			building = 0;
+			day++;
+			System.out.print(returnDay(day) + "\n");
+			FrameMaker.appendTA(returnDay(day-1) + "\n", Color.black);
+			totalCost += dayCost;
+			dayCost = 0;
+		}
 		
+		if (day == days) {
+			System.out.println("celkova cena prepravy: " + totalCost);
+			WriteData.appendToFile(String.valueOf(totalCost));
+			JOptionPane.showMessageDialog(null, "Simulace dokonèena");
+			WriteData.closeFile();
+			canSimulate = false;
+		}
+		building++;
+			
+	}
+	
+	public void simulate() {
+		Factory fac;
+		cancel = false;
+		boolean itIsOK;
+		int index = 0;
+		
+		if (cancel)
+			return;
+		
+		
+		if (buildings[building] instanceof Factory) {
+			((Factory) buildings[building]).addProduction(day);
+		} else {
+			index = 0;
+			do {
+				if (day == 0)
+					((Shop) buildings[building]).takeFromStocks(day, days, this);
+
+				fac = graph.getNearestFactoryToShop((Shop) buildings[building], this, index);
+				if (fac == null)
+					return;
+
+				itIsOK = ((Shop) buildings[building]).transportArticles(fac, day, days, lowestCostNOW, this);
+				index++;
+			} while (!itIsOK);
+		}
+	}
+
+	public String returnDay(int day) {
+		return "Cena prepravy za " + (day + 1) + ". den: " + dayCost;
+	}
+
+	/**
+	 * 
+	 * @param i
+	 * @param simulation
+	 * @return
+	 */
+	public int[] getProduction(int i) {
+		int[] production = new int[getDays() * getArticles()];
+
+		for (int j = 0; j < getDays() * getArticles(); j++) {
+			production[j] = getFactoriesProduction(j, i);
+		}
+
+		return production;
+	}
+
+	/**
+	 * 
+	 * @param i
+	 * @param simulation
+	 * @return
+	 */
+	public int[] getDemand(int i) {
+		int[] demand = new int[getDays() * getArticles()];
+
+		for (int j = 0; j < getDays() * getArticles(); j++) {
+			demand[j] = getDemand(j, i - getFactories());
+		}
+
+		return demand;
+	}
+
+	/**
+	 * 
+	 * @param i
+	 * @param simulation
+	 * @return
+	 */
+	public int[] getStartingSupplies(int i) {
+		int[] supplies = new int[getArticles()];
+
+		for (int j = 0; j < getArticles(); j++) {
+			supplies[j] = getStartingSupplies(j, i - getFactories());
+		}
+
+		return supplies;
 	}
 
 }

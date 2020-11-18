@@ -1,0 +1,92 @@
+Produkce továrny èíslo: 0, den: 0
+Zboží èíslo: 0, produkce: 10
+Zboží èíslo: 1, produkce: 10
+
+Produkce továrny èíslo: 1, den: 0
+Zboží èíslo: 0, produkce: 10
+Zboží èíslo: 1, produkce: 10
+
+Továrna 1 pøeváží: 
+Pøevoz zboží :1 do obchodu: 0 z továrny 1 - poèet zboží: 10
+Továrna 0 pøeváží: 
+Pøevoz zboží :1 do obchodu: 0 z továrny 0 - poèet zboží: 10
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 1 z továrny 0 - poèet zboží: 10
+Továrna 1 pøeváží: 
+Pøevoz zboží :0 do obchodu: 1 z továrny 1 - poèet zboží: 10
+Produkce továrny èíslo: 1, den: 1
+Zboží èíslo: 0, produkce: 10
+Zboží èíslo: 1, produkce: 10
+
+Továrna 1 pøeváží: 
+Pøevoz zboží :1 do obchodu: 0 z továrny 1 - poèet zboží: 10
+Továrna 0 pøeváží: 
+Pøevoz zboží :1 do obchodu: 0 z továrny 0 - poèet zboží: 10
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 1 z továrny 0 - poèet zboží: 0
+Továrna 1 pøeváží: 
+Pøevoz zboží :0 do obchodu: 1 z továrny 1 - poèet zboží: 10
+2050Produkce továrny èíslo: 0, den: 0
+Zboží èíslo: 0, produkce: 10
+
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 2
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 2
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 4
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 4
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 6
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 6
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 8
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 8
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 10
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 10
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 10
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+Továrna 0 pøeváží: 
+Pøevoz zboží :0 do obchodu: 0 z továrny 0 - poèet zboží: 0
+70
