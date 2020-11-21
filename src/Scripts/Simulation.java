@@ -1,11 +1,10 @@
 package Scripts;
 
 import java.awt.Color;
-import java.awt.Frame;
 import java.util.Arrays;
 
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
+
 
 /**
  * Trida reprezentujici simulaci
@@ -230,32 +229,40 @@ public class Simulation {
 			}
 			
 
-			System.out.print(returnDay(day) + "\n");
-			FrameMaker.appendTA(returnDay(day), Color.green);
+			System.out.print(returnDayCost(day) + "\n");
+			FrameMaker.appendTP(returnDayCost(day), Color.green);
 			totalCost += dayCost;
 			
 			dayCost = 0;
 		}
 		System.out.println("celkova cena prepravy: " + totalCost);
 		WriteData.appendToFile("celkova cena prepravy: " + String.valueOf(totalCost));
-		FrameMaker.appendTA("celkova cena prepravy: " + totalCost, Color.GREEN);
+		FrameMaker.appendTP("celkova cena prepravy: " + totalCost, Color.GREEN);
 		JOptionPane.showMessageDialog(null, "Simulace dokonèena");
 		WriteData.closeFile();
 	}
 	
+	/**
+	 * Pokroci o jeden den v simulaci v simulaci, nastavi potrebne parametry
+	 */
 	public void nextStep() {
+		if (cancel)
+			return;
+		
 		if (building == graph.getList().length-1) {
 			building = 0;
 			day++;
-			System.out.print(returnDay(day) + "\n");
-			FrameMaker.appendTA(returnDay(day-1) + "\n", Color.black);
+			System.out.print(returnDayCost(day) + "\n");
+			FrameMaker.appendTP(returnDayCost(day-1) + "\n", Color.black);
 			totalCost += dayCost;
 			dayCost = 0;
 		}
 		
 		if (day == days) {
 			System.out.println("celkova cena prepravy: " + totalCost);
-			WriteData.appendToFile(String.valueOf(totalCost));
+			WriteData.appendToFile("Celková cena pøepravy: " + String.valueOf(totalCost));
+			FrameMaker.appendTP("Celková cena pøepravy: " + String.valueOf(totalCost) + "/n", Color.GREEN);
+			FrameMaker.appendTP("Simulace dokonèena!\n", Color.GREEN, true);
 			JOptionPane.showMessageDialog(null, "Simulace dokonèena");
 			WriteData.closeFile();
 			canSimulate = false;
@@ -264,15 +271,17 @@ public class Simulation {
 			
 	}
 	
+	/**
+	 * Nasimuluje produkci a transport
+	 */
 	public void simulate() {
+		if (cancel)
+			return;
+		
 		Factory fac;
 		cancel = false;
 		boolean itIsOK;
 		int index = 0;
-		
-		if (cancel)
-			return;
-		
 		
 		if (buildings[building] instanceof Factory) {
 			((Factory) buildings[building]).addProduction(day);
@@ -283,8 +292,10 @@ public class Simulation {
 					((Shop) buildings[building]).takeFromStocks(day, days, this);
 
 				fac = graph.getNearestFactoryToShop((Shop) buildings[building], this, index);
-				if (fac == null)
+				if (fac == null) {
+					cancel = true;
 					return;
+				}
 
 				itIsOK = ((Shop) buildings[building]).transportArticles(fac, day, days, lowestCostNOW, this);
 				index++;
@@ -292,7 +303,12 @@ public class Simulation {
 		}
 	}
 
-	public String returnDay(int day) {
+	/**
+	 * Vrati string s prehledem o cene dany den
+	 * @param day den simulace
+	 * @return string ve formatu "Cena prepravy za den_simulace den: cena_dne"
+	 */
+	public String returnDayCost(int day) {
 		return "Cena prepravy za " + (day + 1) + ". den: " + dayCost;
 	}
 
@@ -342,6 +358,10 @@ public class Simulation {
 		}
 
 		return supplies;
+	}
+	
+	public void restartSim() {
+		
 	}
 
 }

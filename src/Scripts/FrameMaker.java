@@ -29,16 +29,20 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.html.StyleSheet.ListPainter;
 
+/**
+ * Trida vytvarejici okna apliakce
+ * 
+ * @author Jan Kubice & Michaela Benešová
+ *
+ */
 public class FrameMaker {
 
 	public ReadData readData;
 	public Simulation sim;
 
 	private static boolean write;
-	public static JTextArea ta = new JTextArea();
 	public static JTextPane tp = new JTextPane();
 	public static JScrollPane sp = new JScrollPane(tp);
-	
 
 	public static JLabel speedLabel = new JLabel();
 	public static JLabel dayLabel = new JLabel();
@@ -53,15 +57,8 @@ public class FrameMaker {
 	public JFrame makeMenu() {
 		JLabel emptyLabel = new JLabel("Menu");
 		JButton start = new JButton("Start simulation");
-		JButton generate = new JButton("Generate data");
 		JButton settings = new JButton("Settings");
 		JButton exit = new JButton("Exit");
-
-		ta = new JTextArea(16, 58);
-		
-		ta.setEditable(false); // set textArea non-editable
-		JScrollPane scroll = new JScrollPane(ta);
-		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 		start.addActionListener(new ActionListener() {
 			@Override
@@ -85,7 +82,7 @@ public class FrameMaker {
 
 			}
 		});
-		
+
 		settings.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -95,8 +92,8 @@ public class FrameMaker {
 		});
 
 		JFrame frame = new JFrame("Menu");
-		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -105,7 +102,6 @@ public class FrameMaker {
 
 		panel.add(emptyLabel);
 		panel.add(start);
-		panel.add(generate);
 		panel.add(settings);
 		panel.add(exit);
 
@@ -119,15 +115,16 @@ public class FrameMaker {
 
 	public JFrame simulationWindow() {
 		JFrame frame = new JFrame("Simulation");
-		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-		
+
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		JButton back = new JButton("Back");
 		JButton play = new JButton("Play");
 		JButton letSim = new JButton("Fast-forward");
 		JButton slow = new JButton("Slow down");
 		JButton speed = new JButton("Speed up");
-		speedLabel.setText("Sim speed: " + String.valueOf((float)Settings.loopDelay / 1000));
-		dayLabel.setText("Day: " + sim.day+1);
+		speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.loopDelay / 1000));
+		dayLabel.setText("Day: " + sim.day + 1);
 		actPrice.setText("Actual price: " + sim.totalCost);
 
 		JPanel panel = new JPanel();
@@ -145,11 +142,13 @@ public class FrameMaker {
 		play.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				String name = WriteData.createFile();
+				WriteData.openFile(name, true);
 				sim.setUpSimulation();
 				// sim.startSimulation();
 				sim.canSimulate = true;
-				speedLabel.setText("Sim speed: " + String.valueOf((float)Settings.loopDelay / 1000));
-				dayLabel.setText("Day: " + String.valueOf(sim.day+1));
+				speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.loopDelay / 1000));
+				dayLabel.setText("Day: " + String.valueOf(sim.day + 1));
 				actPrice.setText("Actual price: " + String.valueOf(sim.totalCost));
 			}
 		});
@@ -158,7 +157,7 @@ public class FrameMaker {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Settings.addLoopDelay();
-				speedLabel.setText("Sim speed: " + String.valueOf((float)Settings.loopDelay / 1000));
+				speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.loopDelay / 1000));
 			}
 		});
 
@@ -166,7 +165,7 @@ public class FrameMaker {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Settings.takeLoopDelay();
-				speedLabel.setText("Sim speed: " + String.valueOf((float)Settings.loopDelay / 1000));
+				speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.loopDelay / 1000));
 			}
 		});
 
@@ -177,8 +176,6 @@ public class FrameMaker {
 			}
 		});
 
-		JScrollPane scroll = new JScrollPane(ta, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 		panel.add(back);
 		panel.add(play);
@@ -197,8 +194,13 @@ public class FrameMaker {
 		return frame;
 	}
 
+	/**
+	 * Otevre okno vyberu slozek a vrati zvoleny adresar
+	 * @return cesta ke zvolenemu adresari
+	 */
 	public String getFile() {
-		JFileChooser fileChooser = new JFileChooser("d:");
+		JFileChooser fileChooser = new JFileChooser(ReadData.path);
+		System.out.println(ReadData.path);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
 		fileChooser.setFileFilter(filter);
 		int result = fileChooser.showOpenDialog(null);
@@ -215,24 +217,65 @@ public class FrameMaker {
 		}
 		return null;
 	}
-	
+
+	/**
+	 * Vytvori okno nastaveni
+	 * @return okno nastaveni
+	 */
 	public JFrame settingsWindow() {
 		JFrame frame = new JFrame("Settings");
 		JLabel label = new JLabel("settings");
+		JLabel filePathText = new JLabel("File with txts: ");
+		JLabel filePath = new JLabel(Settings.getPath());
+		JButton setPath = new JButton("Choose");
+
+		JLabel savePathText = new JLabel("File to save txts: ");
+		JLabel savePath = new JLabel(Settings.getSavePath());
+		JButton setSavePath = new JButton("Choose");
+
 		JButton back = new JButton("Back");
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		
+
 		back.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				FrameManager.closeFrame(FrameManager.frameSettings);
 			}
 		});
-		
+
+		setPath.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser f = new JFileChooser();
+				f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				f.showSaveDialog(null);
+				Settings.setPath(f.getSelectedFile().toString());
+				readData.setPath(f.getSelectedFile().toString());
+				filePath.setText(f.getSelectedFile().toString());
+			}
+		});
+
+		setSavePath.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser f = new JFileChooser();
+				f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				f.showSaveDialog(null);
+				Settings.setSavePath(f.getSelectedFile().toString());
+				savePath.setText(f.getSelectedFile().toString());
+			}
+		});
+
 		panel.add(label);
 		panel.add(back);
-		
+		panel.add(filePathText);
+		panel.add(filePath);
+		panel.add(setPath);
+		panel.add(savePathText);
+		panel.add(savePath);
+		panel.add(setSavePath);
+
 		frame.add(panel);
 		frame.setLocationRelativeTo(null);
 		frame.setSize(500, 500);
@@ -240,19 +283,45 @@ public class FrameMaker {
 		return frame;
 	}
 
-	public static void appendTA(String text, Color color) {
-		/*if (write) {
-			ta.insert(text + "\n", 0);
-			ta.update(ta.getGraphics());
-		}*/
-		Document doc = tp.getDocument();
-		 SimpleAttributeSet attributeSet = new SimpleAttributeSet();  
-		 StyleConstants.setForeground(attributeSet, color);  
+	/**
+	 * Vypise text do textpane v okne simulace
+	 * @param text text vypisu
+	 * @param color barva vypisu
+	 */
+	public static void appendTP(String text, Color color) {
+		if (!write)
+			return;
 		
+		Document doc = tp.getDocument();
+		SimpleAttributeSet attributeSet = new SimpleAttributeSet();
+		StyleConstants.setForeground(attributeSet, color);
+
 		try {
 			doc.insertString(0, text, attributeSet);
 		} catch (BadLocationException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+	}
+
+	/**
+	 * Vypise text do textpane v okne simulace
+	 * @param text text vypisu
+	 * @param color barva vypisu
+	 * @param bold zda ma byt text tucny
+	 */
+	public static void appendTP(String text, Color color, boolean bold) {
+		if (!write)
+			return;
+		
+		Document doc = tp.getDocument();
+		SimpleAttributeSet attributeSet = new SimpleAttributeSet();
+		StyleConstants.setForeground(attributeSet, color);
+		StyleConstants.setBold(attributeSet, bold);
+
+		try {
+			doc.insertString(0, text, attributeSet);
+		} catch (BadLocationException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 

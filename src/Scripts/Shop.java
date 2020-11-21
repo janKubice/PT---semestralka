@@ -13,11 +13,11 @@ public class Shop extends Building {
 	int[] demand;
 
 	/**
-	 * Konstruktor
+	 * Konstruktor obchodu
 	 * 
 	 * @param index            index budovy, jedna se o unikatni identifikator
-	 * @param demand
-	 * @param startingSupplies
+	 * @param demand           pole celkove poptavky obchodu
+	 * @param startingSupplies pocatecni zasoby obchodu
 	 */
 	public Shop(int index, int[] demand, int[] startingSupplies) {
 		super(index, startingSupplies);
@@ -34,7 +34,7 @@ public class Shop extends Building {
 	 * @param daysTotal  celkovy pocet dni simulace
 	 * @param lowestCost cena prepravy
 	 * @param sim        instance simulace
-	 * @return
+	 * @return true pokud byla splnena poptavka, jinak false
 	 */
 	public boolean transportArticles(Factory factory, int day, int daysTotal, int lowestCost, Simulation sim) {
 		boolean isDemandSatisfied = true;
@@ -67,11 +67,10 @@ public class Shop extends Building {
 				WriteData.appendToFile(
 						"Převoz zboží :" + i + " do obchodu: " + (index - sim.getFactories()) + " z továrny "
 								+ factory.index + " - počet zboží: " + String.valueOf(factory.stocks[i]) + "\n");
-				FrameMaker.appendTA(
-						String.format("Převod zboží %d do obchodu %d z továrny %d. Počet zboží %d, cena přepravy %d \n",
-								i, (index - sim.getFactories()), factory.index, factory.stocks[i],
-								lowestCost * demandInt),
-						Color.black);
+				FrameMaker.appendTP(String.format(
+						"Převod pomocí %s zboží %d do obchodu %d z továrny %d. Počet zboží %d, cena přepravy %d \n",
+						RandomEmoji.getRandomTransportEmoji(), i, (index - sim.getFactories()), factory.index,
+						factory.stocks[i], lowestCost * demandInt), Color.black);
 				factory.stocks[i] = 0;
 				sim.addToDayCost(lowestCost * demandInt);
 			} else {
@@ -79,11 +78,10 @@ public class Shop extends Building {
 				want[i] -= demandInt;
 				WriteData.appendToFile("Převoz zboží :" + i + " do obchodu: " + (index - sim.getFactories())
 						+ " z továrny " + factory.index + " - počet zboží: " + String.valueOf(demandInt) + "\n");
-				FrameMaker.appendTA(
-						String.format("Převoz zboží %d do obchodu %d z továrny %d. Počet žboží %d, cena přepravy %d \n",
-								i, (index - sim.getFactories()), factory.index, factory.stocks[i],
-								lowestCost * demandInt),
-						Color.black);
+				FrameMaker.appendTP(String.format(
+						"Převoz pomocí %s zboží pomocí %d do obchodu %d z továrny %d. Počet žboží %d, cena přepravy %d \n",
+						RandomEmoji.getRandomTransportEmoji(), i, (index - sim.getFactories()), factory.index,
+						factory.stocks[i], lowestCost * demandInt), Color.black);
 				factory.stocks[i] -= want[i];
 				sim.addToDayCost(lowestCost * demandInt);
 			}
@@ -132,5 +130,19 @@ public class Shop extends Building {
 			demand[d] = want[art];
 			d += daysTotal;
 		}
+	}
+
+	/**
+	 * Zjisti jake zbozi a kolik chybelo
+	 * 
+	 * @return jednorozmerne pole kde na prvnim indexu je index zbozi a na druhem
+	 *         indexu pocet kolik zbozi chybelo
+	 */
+	public int[] getBadArticle() {
+		for (int i = 0; i < demand.length; i++) {
+			if (demand[i] != 0)
+				return new int[] { i, demand[i] };
+		}
+		return null;
 	}
 }

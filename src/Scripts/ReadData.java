@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  */
 public class ReadData {
 	public static String path;
-	Simulation simulation;
+	private Simulation simulation;
 	
 	public ReadData(String path, Simulation simulator) {
 		this.path = path;
@@ -125,10 +125,6 @@ public class ReadData {
 		}
 		
 		return numbers;
-	}
-	
-	private boolean checkFile() {
-		return false;
 	}
 	
 }

@@ -1,5 +1,6 @@
 package Scripts;
 
+import java.awt.Color;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -38,8 +39,8 @@ public class Graph{
 	public void addEdge(Building source, Building dest, int cost) {
 		Edge edge1 = new Edge(cost, source, dest);
 		Edge edge2 = new Edge(cost, dest, source);
-		list[source.index].addFirst(edge1);
-		list[dest.index].addFirst(edge2);
+		list[source.getIndex()].addFirst(edge1);
+		list[dest.getIndex()].addFirst(edge2);
 	}
 	
 	/**
@@ -65,6 +66,10 @@ public class Graph{
 	public Factory getNearestFactoryToShop(Shop shop, Simulation sim, int x) {
 		if (x >= sim.getFactories()) {
 			System.out.println("Neuspokojená poptávka obchodu: " + shop.index);
+			WriteData.appendToFile("Neuspokojená poptávka obchodu: " + shop.index + "\n");
+			int shopArt[] = shop.getBadArticle();
+			FrameMaker.appendTP(String.format("Pro zboží %d chybìlo %d kusù. \n", shopArt[0], shopArt[1]), Color.RED);
+			FrameMaker.appendTP("Neuspokojená poptávka obchodu: " + shop.index + "\n", Color.RED, true);
 			return null;
 		}
 
