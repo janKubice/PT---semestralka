@@ -10,10 +10,16 @@ public class Settings {
 	public static int loopDelay = 200;
 	public static int lastLoopDelay;
 	
-	public static String filePath;
-	public static String savePath;
+	private static String filePath;
+	private static String savePath;
 
 	
+	
+
+	public static String getFilePath() {
+		return filePath;
+	}
+
 	/**
 	 * Zvysi cas vyuzity pro uspani pred jednotlivyma trasportama
 	 */
@@ -47,6 +53,13 @@ public class Settings {
 		loopDelay = 0;
 		
 		lastLoopDelay = loopDelay;
+	}
+	
+	/**
+	 * Nastavi cas pred jednotlivyma trasportama na puvodni hodnotu
+	 */
+	public static void unLetFree() {
+		loopDelay = lastLoopDelay;
 	}
 	
 	/**

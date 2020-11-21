@@ -28,12 +28,14 @@ public class Factory extends Building{
 	 */
 	public void addProduction(int day) {
 		int d = day;
-		WriteData.appendToFile("Produkce továrny èíslo: " + index + ", den: " + day+ "\n");
-		FrameMaker.appendTP("Produkce továrny èíslo: " + index + ", den: " + day+ "\n", Color.BLUE);
-		for (int art = 0; art < stocks.length; art++) {
+		WriteData.appendToFile("Produkce továrny èíslo: " + getIndex() + ", den: " + day+ "\n");
+		
+		FrameMaker.appendTP("Produkce továrny èíslo: " + getIndex() + ", den: " + day+ "\n", Color.BLUE);
+		
+		for (int art = 0; art < getStocks().length; art++) {
 			WriteData.appendToFile("Zboží èíslo: " + String.valueOf(art) + ", produkce: " + String.valueOf(production[day]) + "\n");
 			FrameMaker.appendTP("Zboží èíslo: " + String.valueOf(art) + ", produkce: " + String.valueOf(production[day]) + "\n", Color.BLACK);
-			stocks[art] = production[day];
+			getStocks()[art] = production[day];
 			d += day;
 		}
 		
@@ -46,14 +48,14 @@ public class Factory extends Building{
 	 */
 	public void dumpStock() {
 		int sum = 0;
-		for (int i : stocks) {
+		for (int i : getStocks()) {
 			sum += i;
 		}
 		
-		WriteData.appendToFile("Celkové vyhozené zboží z továrny: " + index + ": " + String.valueOf(sum));
-		FrameMaker.appendTP("Celkové vyhozené zboží z továrny: " + index + ": " + String.valueOf(sum) + "\n", Color.RED);
+		WriteData.appendToFile("Celkové vyhozené zboží z továrny tento den: " + getIndex() + ": " + String.valueOf(sum));
+		FrameMaker.appendTP("Celkové vyhozené zboží z továrny tento den: " + getIndex() + ": " + String.valueOf(sum) + "\n", Color.RED);
 		
-		stocks = new int[stocks.length];
+		setStocks(new int[getStocks().length]);
 	}
 
 

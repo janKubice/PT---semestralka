@@ -40,7 +40,7 @@ public class FrameMaker {
 	public ReadData readData;
 	public Simulation sim;
 
-	private static boolean write;
+	private static boolean writeToTP;
 	public static JTextPane tp = new JTextPane();
 	public static JScrollPane sp = new JScrollPane(tp);
 
@@ -51,7 +51,7 @@ public class FrameMaker {
 	public FrameMaker(ReadData readData, Simulation sim) {
 		this.readData = readData;
 		this.sim = sim;
-		write = true;
+		writeToTP = true;
 	}
 
 	public JFrame makeMenu() {
@@ -108,13 +108,17 @@ public class FrameMaker {
 		frame.add(panel);
 		frame.setLocationRelativeTo(null);
 		frame.setSize(500, 500);
-		frame.pack();
 
 		return frame;
 	}
 
+	/**
+	 * Vytvori okno simulace
+	 * @return okno simulace
+	 */
 	public JFrame simulationWindow() {
 		JFrame frame = new JFrame("Simulation");
+		frame.setResizable(false);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -123,6 +127,7 @@ public class FrameMaker {
 		JButton letSim = new JButton("Fast-forward");
 		JButton slow = new JButton("Slow down");
 		JButton speed = new JButton("Speed up");
+		JButton write = new JButton("Write - OFF");
 		speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.loopDelay / 1000));
 		dayLabel.setText("Day: " + sim.day + 1);
 		actPrice.setText("Actual price: " + sim.totalCost);
@@ -176,12 +181,28 @@ public class FrameMaker {
 			}
 		});
 
+		write.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (write.getText() == "Write - OFF") {
+					write.setText("Write - ON");
+					Settings.letFree();
+				}
+				else {
+					write.setText("Write - OFF");
+					Settings.unLetFree();
+				}
+				
+				writeToTP = !writeToTP;
+			}
+		});
 
 		panel.add(back);
 		panel.add(play);
 		panel.add(letSim);
 		panel.add(slow);
 		panel.add(speed);
+		panel.add(write);
 		panel.add(actPrice);
 		panel.add(dayLabel);
 		panel.add(speedLabel);
@@ -189,13 +210,12 @@ public class FrameMaker {
 
 		frame.add(panel);
 		frame.setLocationRelativeTo(null);
-		frame.setSize(500, 500);
-		frame.pack();
+		frame.setSize(700, 500);
 		return frame;
 	}
 
 	/**
-	 * Otevre okno vyberu slozek a vrati zvoleny adresar
+	 * Otevre okno pro vyber scenare simulace
 	 * @return cesta ke zvolenemu adresari
 	 */
 	public String getFile() {
@@ -212,7 +232,7 @@ public class FrameMaker {
 				return null;
 			else {
 				JOptionPane.showMessageDialog(null, "Soubor vybrán");
-				return selectedFile.getPath();
+				return selectedFile.getPath() + "\\";
 			}
 		}
 		return null;
@@ -262,7 +282,7 @@ public class FrameMaker {
 				JFileChooser f = new JFileChooser();
 				f.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				f.showSaveDialog(null);
-				Settings.setSavePath(f.getSelectedFile().toString());
+				Settings.setSavePath(f.getSelectedFile().toString() + "\\");
 				savePath.setText(f.getSelectedFile().toString());
 			}
 		});
@@ -279,7 +299,6 @@ public class FrameMaker {
 		frame.add(panel);
 		frame.setLocationRelativeTo(null);
 		frame.setSize(500, 500);
-		frame.pack();
 		return frame;
 	}
 
@@ -289,7 +308,7 @@ public class FrameMaker {
 	 * @param color barva vypisu
 	 */
 	public static void appendTP(String text, Color color) {
-		if (!write)
+		if (!writeToTP)
 			return;
 		
 		Document doc = tp.getDocument();
@@ -310,7 +329,7 @@ public class FrameMaker {
 	 * @param bold zda ma byt text tucny
 	 */
 	public static void appendTP(String text, Color color, boolean bold) {
-		if (!write)
+		if (!writeToTP)
 			return;
 		
 		Document doc = tp.getDocument();

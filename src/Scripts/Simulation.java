@@ -257,6 +257,8 @@ public class Simulation {
 			totalCost += dayCost;
 			dayCost = 0;
 		}
+		else
+			building++;
 		
 		if (day == days) {
 			System.out.println("celkova cena prepravy: " + totalCost);
@@ -267,7 +269,10 @@ public class Simulation {
 			WriteData.closeFile();
 			canSimulate = false;
 		}
-		building++;
+
+		System.out.println("b: " + building);
+		System.out.println("d: " + day);
+		
 			
 	}
 	
@@ -282,7 +287,7 @@ public class Simulation {
 		cancel = false;
 		boolean itIsOK;
 		int index = 0;
-		
+		System.out.println("Build: " + building);
 		if (buildings[building] instanceof Factory) {
 			((Factory) buildings[building]).addProduction(day);
 		} else {
@@ -360,6 +365,9 @@ public class Simulation {
 		return supplies;
 	}
 	
+	/**
+	 * vymaze hodnoty ze simulace, nastaveni
+	 */
 	public void restartSim() {
 		
 	}

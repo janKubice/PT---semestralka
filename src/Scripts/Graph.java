@@ -65,20 +65,21 @@ public class Graph{
 	 */
 	public Factory getNearestFactoryToShop(Shop shop, Simulation sim, int x) {
 		if (x >= sim.getFactories()) {
-			System.out.println("Neuspokojená poptávka obchodu: " + shop.index);
-			WriteData.appendToFile("Neuspokojená poptávka obchodu: " + shop.index + "\n");
 			int shopArt[] = shop.getBadArticle();
+			WriteData.appendToFile("Neuspokojená poptávka obchodu: " + shop.getIndex() + "\n");
+			WriteData.appendToFile(String.format("Pro zboží %d chybìlo %d kusù. \n", shopArt[0], shopArt[1]));
+			
 			FrameMaker.appendTP(String.format("Pro zboží %d chybìlo %d kusù. \n", shopArt[0], shopArt[1]), Color.RED);
-			FrameMaker.appendTP("Neuspokojená poptávka obchodu: " + shop.index + "\n", Color.RED, true);
+			FrameMaker.appendTP("Neuspokojená poptávka obchodu: " + shop.getIndex() + "\n", Color.RED, true);
 			return null;
 		}
 
-		Factory nearest = (Factory)list[shop.index].get(0).getDestination();
-		int lowestCost = list[shop.index].get(0).getCost();
+		Factory nearest = (Factory)list[shop.getIndex()].get(0).getDestination();
+		int lowestCost = list[shop.getIndex()].get(0).getCost();
 		LinkedList<Edge> factoriesByCost = new LinkedList<Edge>();
 		
-		for (int factory = 0; factory < list[shop.index].size(); factory++) {
-			factoriesByCost.add(list[shop.index].get(factory));
+		for (int factory = 0; factory < list[shop.getIndex()].size(); factory++) {
+			factoriesByCost.add(list[shop.getIndex()].get(factory));
 		}
 
 		Collections.sort(factoriesByCost,new Comparator<Edge>() {
@@ -91,6 +92,7 @@ public class Graph{
 		sim.lowestCostNOW = factoriesByCost.get(x).getCost();
 		return (Factory)factoriesByCost.get(x).getDestination();
 	}
+	
 	
 	public LinkedList<Edge>[] getList() {
 		return list;

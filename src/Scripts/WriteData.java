@@ -20,7 +20,7 @@ public class WriteData {
 	 * @return cestu k souboru
 	 */
 	public static String createFile() {
-		String name = Settings.savePath + generateFileName() + ".txt";
+		String name = Settings.getSavePath() + generateFileName() + ".txt";
 		try {
 			File myObj = new File(name);
 			if (myObj.createNewFile()) {
@@ -56,7 +56,7 @@ public class WriteData {
 	 * @return nazev vygenerovaneho souboru
 	 */
 	private static String generateFileName() {
-		return "output" + new SimpleDateFormat("yyyyMMddHHmm'.txt'").format(new Date());
+		return "output" + new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
 	}
 	
 	/**

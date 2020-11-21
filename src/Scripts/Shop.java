@@ -42,7 +42,7 @@ public class Shop extends Building {
 		int[] want = new int[sim.getArticles()];
 		int d = day;
 
-		WriteData.appendToFile("Továrna " + factory.index + " převáží: \n");
+		WriteData.appendToFile("Továrna " + factory.getIndex() + " převáží: \n");
 
 		for (int art = 0; art < want.length; art++) {
 			want[art] = demand[d];
@@ -59,30 +59,35 @@ public class Shop extends Building {
 				e.printStackTrace();
 			}
 
-			if (factory.stocks[i] < want[i]) {
+			if (factory.getStocks()[i] < want[i]) {
 				isDemandSatisfied = false;
-				demandInt = factory.stocks[i];
-				want[i] -= factory.stocks[i];
+				demandInt = factory.getStocks()[i];
+				want[i] -= factory.getStocks()[i];
 
-				WriteData.appendToFile(
-						"Převoz zboží :" + i + " do obchodu: " + (index - sim.getFactories()) + " z továrny "
-								+ factory.index + " - počet zboží: " + String.valueOf(factory.stocks[i]) + "\n");
+				WriteData.appendToFile("Převoz zboží :" + i + " do obchodu: " + (getIndex() - sim.getFactories())
+						+ " z továrny " + factory.getIndex() + " - počet zboží: "
+						+ String.valueOf(factory.getStocks()[i]) + "\n");
+
 				FrameMaker.appendTP(String.format(
 						"Převod pomocí %s zboží %d do obchodu %d z továrny %d. Počet zboží %d, cena přepravy %d \n",
-						RandomEmoji.getRandomTransportEmoji(), i, (index - sim.getFactories()), factory.index,
-						factory.stocks[i], lowestCost * demandInt), Color.black);
-				factory.stocks[i] = 0;
+						RandomEmoji.getRandomTransportEmoji(), i, (getIndex() - sim.getFactories()), factory.getIndex(),
+						factory.getStocks()[i], lowestCost * demandInt), Color.black);
+
+				factory.getStocks()[i] = 0;
 				sim.addToDayCost(lowestCost * demandInt);
+				
 			} else {
-				demandInt = factory.stocks[i] - (factory.stocks[i] - want[i]);
+				demandInt = factory.getStocks()[i] - (factory.getStocks()[i] - want[i]);
 				want[i] -= demandInt;
-				WriteData.appendToFile("Převoz zboží :" + i + " do obchodu: " + (index - sim.getFactories())
-						+ " z továrny " + factory.index + " - počet zboží: " + String.valueOf(demandInt) + "\n");
+				WriteData.appendToFile("Převoz zboží :" + i + " do obchodu: " + (getIndex() - sim.getFactories())
+						+ " z továrny " + factory.getIndex() + " - počet zboží: " + String.valueOf(demandInt) + "\n");
+				
 				FrameMaker.appendTP(String.format(
 						"Převoz pomocí %s zboží pomocí %d do obchodu %d z továrny %d. Počet žboží %d, cena přepravy %d \n",
-						RandomEmoji.getRandomTransportEmoji(), i, (index - sim.getFactories()), factory.index,
-						factory.stocks[i], lowestCost * demandInt), Color.black);
-				factory.stocks[i] -= want[i];
+						RandomEmoji.getRandomTransportEmoji(), i, (getIndex() - sim.getFactories()), factory.getIndex(),
+						factory.getStocks()[i], lowestCost * demandInt), Color.black);
+				
+				factory.getStocks()[i] -= want[i];
 				sim.addToDayCost(lowestCost * demandInt);
 			}
 		}
@@ -114,14 +119,14 @@ public class Shop extends Building {
 		}
 
 		for (int i = 0; i < want.length; i++) {
-			if (stocks[i] < want[i]) {
-				demandInt = stocks[i];
-				want[i] -= stocks[i];
-				stocks[i] = 0;
+			if (getStocks()[i] < want[i]) {
+				demandInt = getStocks()[i];
+				want[i] -= getStocks()[i];
+				getStocks()[i] = 0;
 			} else {
-				demandInt = stocks[i] - (stocks[i] - want[i]);
+				demandInt = getStocks()[i] - (getStocks()[i] - want[i]);
 				want[i] -= demandInt;
-				stocks[i] -= want[i];
+				getStocks()[i] -= want[i];
 			}
 		}
 

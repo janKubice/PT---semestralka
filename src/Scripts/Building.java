@@ -12,6 +12,10 @@ public class Building {
 	private int index;
 	private int[] stocks;
 
+	public void setStocks(int[] stocks) {
+		this.stocks = stocks;
+	}
+
 	public int getIndex() {
 		return index;
 	}
