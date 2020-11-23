@@ -2,14 +2,18 @@ package Scripts;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -17,6 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
@@ -28,6 +33,7 @@ import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.html.StyleSheet.ListPainter;
+import java.awt.Font;
 
 /**
  * Trida vytvarejici okna apliakce
@@ -55,10 +61,21 @@ public class FrameMaker {
 	}
 
 	public JFrame makeMenu() {
-		JLabel emptyLabel = new JLabel("Menu");
+		JLabel menuLabel = new JLabel("Menu");
 		JButton start = new JButton("Start simulation");
 		JButton settings = new JButton("Settings");
 		JButton exit = new JButton("Exit");
+		
+		menuLabel.setFont(new Font("Verdana", Font.PLAIN, 25));
+		
+		menuLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		start.setAlignmentX(Component.CENTER_ALIGNMENT);
+		settings.setAlignmentX(Component.CENTER_ALIGNMENT);
+		exit.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		start.setMaximumSize(new Dimension(150, 30));
+		settings.setMaximumSize(new Dimension(150, 30));
+		exit.setMaximumSize(new Dimension(150, 30));
 
 		start.addActionListener(new ActionListener() {
 			@Override
@@ -88,6 +105,14 @@ public class FrameMaker {
 			public void actionPerformed(ActionEvent e) {
 				FrameManager.frameSettings = settingsWindow();
 				FrameManager.openFrame(FrameManager.frameSettings);
+				FrameManager.closeFrame(FrameManager.frameMenu);
+			}
+		});
+		
+		exit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
 			}
 		});
 
@@ -96,19 +121,25 @@ public class FrameMaker {
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		frame.setTitle("Menu");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		panel.add(emptyLabel);
+		panel.add(Box.createRigidArea(new Dimension(0, 120)));
+		panel.add(menuLabel);
+		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(start);
+		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(settings);
+		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(exit);
 
+		
 		frame.add(panel);
 		frame.setLocationRelativeTo(null);
 		frame.setSize(500, 500);
-
+		frame.setResizable(false);
 		return frame;
 	}
 
@@ -244,11 +275,11 @@ public class FrameMaker {
 	 */
 	public JFrame settingsWindow() {
 		JFrame frame = new JFrame("Settings");
-		JLabel label = new JLabel("settings");
+		JLabel label = new JLabel("Settings");
 		JLabel filePathText = new JLabel("File with txts: ");
 		JLabel filePath = new JLabel(Settings.getPath());
 		JButton setPath = new JButton("Choose");
-
+		
 		JLabel savePathText = new JLabel("File to save txts: ");
 		JLabel savePath = new JLabel(Settings.getSavePath());
 		JButton setSavePath = new JButton("Choose");
@@ -256,11 +287,38 @@ public class FrameMaker {
 		JButton back = new JButton("Back");
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		label.setFont(new Font("Verdana", Font.PLAIN, 25));
+		label.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		filePathText.setFont(new Font("Verdana", Font.PLAIN, 15));
+		filePathText.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		savePathText.setFont(new Font("Verdana", Font.PLAIN, 15));
+		savePathText.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		filePath.setFont(new Font("Verdana", Font.PLAIN, 15));
+		filePath.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		savePath.setFont(new Font("Verdana", Font.PLAIN, 15));
+		savePath.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		setPath.setAlignmentX(Component.CENTER_ALIGNMENT);
+		setSavePath.setAlignmentX(Component.CENTER_ALIGNMENT);
+		back.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		setPath.setMaximumSize(new Dimension(150, 30));
+		setSavePath.setMaximumSize(new Dimension(150, 30));
+		back.setMaximumSize(new Dimension(150, 30));
+		
+		
 
 		back.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				FrameManager.closeFrame(FrameManager.frameSettings);
+				FrameManager.openFrame(FrameManager.frameMenu);
 			}
 		});
 
@@ -288,17 +346,26 @@ public class FrameMaker {
 		});
 
 		panel.add(label);
-		panel.add(back);
+		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(filePathText);
+		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(filePath);
+		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(setPath);
+		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(savePathText);
+		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(savePath);
+		panel.add(Box.createRigidArea(new Dimension(0, 5)));
 		panel.add(setSavePath);
-
+		panel.add(Box.createRigidArea(new Dimension(0, 15)));
+		panel.add(back);
+		
 		frame.add(panel);
 		frame.setLocationRelativeTo(null);
 		frame.setSize(500, 500);
+		frame.setResizable(false);
+		frame.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
 		return frame;
 	}
 
