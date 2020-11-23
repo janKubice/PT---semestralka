@@ -128,7 +128,7 @@ public class FrameMaker {
 		JButton slow = new JButton("Slow down");
 		JButton speed = new JButton("Speed up");
 		JButton write = new JButton("Write - OFF");
-		speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.loopDelay / 1000));
+		speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.getLoopDelay() / 1000));
 		dayLabel.setText("Day: " + sim.day + 1);
 		actPrice.setText("Actual price: " + sim.totalCost);
 
@@ -152,7 +152,7 @@ public class FrameMaker {
 				sim.setUpSimulation();
 				// sim.startSimulation();
 				sim.canSimulate = true;
-				speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.loopDelay / 1000));
+				speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.getLoopDelay() / 1000));
 				dayLabel.setText("Day: " + String.valueOf(sim.day + 1));
 				actPrice.setText("Actual price: " + String.valueOf(sim.totalCost));
 			}
@@ -162,7 +162,7 @@ public class FrameMaker {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Settings.addLoopDelay();
-				speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.loopDelay / 1000));
+				speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.getLoopDelay() / 1000));
 			}
 		});
 
@@ -170,7 +170,7 @@ public class FrameMaker {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Settings.takeLoopDelay();
-				speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.loopDelay / 1000));
+				speedLabel.setText("Sim speed: " + String.valueOf((float) Settings.getLoopDelay() / 1000));
 			}
 		});
 
@@ -219,8 +219,8 @@ public class FrameMaker {
 	 * @return cesta ke zvolenemu adresari
 	 */
 	public String getFile() {
-		JFileChooser fileChooser = new JFileChooser(ReadData.path);
-		System.out.println(ReadData.path);
+		JFileChooser fileChooser = new JFileChooser(ReadData.getPath());
+		System.out.println(ReadData.getPath());
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
 		fileChooser.setFileFilter(filter);
 		int result = fileChooser.showOpenDialog(null);

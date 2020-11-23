@@ -6,16 +6,37 @@ package Scripts;
  *
  */
 public class Settings {
-	public static int simulationDelay = 200;
-	public static int loopDelay = 200;
-	public static int lastLoopDelay;
+	private static int simulationDelay = 200;
+	private static int loopDelay = 200;
+	private static int lastLoopDelay;
 	
 	private static String filePath;
 	private static String savePath;
 
-	
-	
+	public static int getSimulationDelay() {
+		return simulationDelay;
+	}
 
+	public static void setSimulationDelay(int simulationDelay) {
+		Settings.simulationDelay = simulationDelay;
+	}
+
+	public static int getLoopDelay() {
+		return loopDelay;
+	}
+
+	public static void setLoopDelay(int loopDelay) {
+		Settings.loopDelay = loopDelay;
+	}
+
+	public static int getLastLoopDelay() {
+		return lastLoopDelay;
+	}
+
+	public static void setLastLoopDelay(int lastLoopDelay) {
+		Settings.lastLoopDelay = lastLoopDelay;
+	}
+	
 	public static String getFilePath() {
 		return filePath;
 	}

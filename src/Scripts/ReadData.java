@@ -11,20 +11,19 @@ import javax.swing.JOptionPane;
  * @author Jan Kubice & Michaela Benešová
  */
 public class ReadData {
-	public static String path;
+	private static String path;
 	private Simulation simulation;
-	
-	public ReadData(String path, Simulation simulator) {
-		this.path = path;
-		this.simulation = simulator;
-	}
-	
+
 	public ReadData(Simulation simulator) {
 		this.simulation = simulator;
 	}
 	
 	public void setPath(String path) {
 		this.path = path;
+	}
+	
+	public static String getPath() {
+		return path;
 	}
 	
 	/**

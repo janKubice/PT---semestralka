@@ -40,7 +40,7 @@ public class Main {
 					simulation.nextStep();
 				}
 			}
-		}, 0, Settings.simulationDelay);
+		}, 0, Settings.getSimulationDelay());
 	}
 
 }

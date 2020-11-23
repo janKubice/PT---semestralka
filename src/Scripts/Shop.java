@@ -54,7 +54,7 @@ public class Shop extends Building {
 				continue;
 
 			try {
-				Thread.sleep(Settings.loopDelay);
+				Thread.sleep(Settings.getLoopDelay());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

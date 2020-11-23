@@ -9,7 +9,7 @@ import java.awt.Color;
  */
 public class Factory extends Building{
 
-	int[] production;
+	private int[] production;
 	
 	/**
 	 * 
