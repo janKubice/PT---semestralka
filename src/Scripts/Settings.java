@@ -84,7 +84,7 @@ public class Settings {
 	 */
 	public static String getPath() {
 		if (filePath == "" || filePath == null)
-			return "";
+			return "Not set";
 		
 		return filePath;
 	}
@@ -95,7 +95,7 @@ public class Settings {
 	 */
 	public static String getSavePath() {
 		if (savePath == "" || savePath == null)
-			return "";
+			return "Not set";
 		
 		return savePath;
 	}
